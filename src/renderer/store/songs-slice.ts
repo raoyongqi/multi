@@ -35,8 +35,6 @@ const songslice = createSlice({
             const index = state.songs.findIndex((h) => h === action.payload.id);
 
 
-            console.log("Removing songs with ID:", action);
-            console.log("Found index:", index);
             // 如果找到了该song（index 不为 -1），则从 songs 数组中删除
             if (index > -1) {
                 state.songs.splice(index, 1);

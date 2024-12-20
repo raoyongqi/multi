@@ -3,7 +3,7 @@
 import { Provider } from 'react-redux';
 import store from '../store/store';
 import { Container } from '@mui/material';
-import FirstSong from './firstItem/first-song';
+import CookiesStat from './firstItem/cookies-stat';
 import React from 'react';
 
 const Home: React.FC = () => {
@@ -11,7 +11,7 @@ const Home: React.FC = () => {
     <Provider store={store}>
       <Container maxWidth="md">
         
-        <FirstSong/>
+        <CookiesStat/>
 
       </Container>
     </Provider>

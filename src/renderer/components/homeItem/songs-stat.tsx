@@ -26,10 +26,7 @@ const songsStat: React.FC = () => {
    }
    return (
       <div>
-        <h1>Songs Data</h1>
-        {/* 在此显示您的歌曲数据 */}
-        {/* 例如： */}
-        {/* <pre>{JSON.stringify(songs, null, 2)}</pre> */}
+
       </div>
     );
 };
