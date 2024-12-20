@@ -46,10 +46,9 @@ if (app.requestSingleInstanceLock()) {
     win.once('show', () => win.webContents.openDevTools());
     // 开发环境加载开发服务器 URL
     await win.loadURL('http://localhost:5173');
-    if (process.platform === 'win32') {
-      require('child_process').execSync('chcp 65001');
-    }
-    
+
+    console.log('我是中文')
+
   } else {
     await win.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
 

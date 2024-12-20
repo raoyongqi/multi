@@ -17,15 +17,20 @@ const FirstSong: React.FC = () => {
   const handleConsoleCookies = async (song: string) => {
     if (isButtonClicked) return; // 如果按钮已经被点击过，则不再执行
     setIsButtonClicked(true); // 设置按钮点击状态
-
+  
     try {
       // 使用 await 调用异步的 fetchPlaylistTracks 函数，并传入 `song` 和 `cookies`
-      const track = await window.electronAPI.fetchPlaylistTracks(song, cookies);
+      const track = await window.electronAPI.fetchPlaylistAll(song, cookies);
       console.log(track);  // 打印返回的 track 到控制台
+      
+      // 将按钮设置为可以点击的状态
+      setIsButtonClicked(false);  // 重置按钮状态
     } catch (err) {
       console.error('Error fetching tracks:', err);  // 捕获并处理错误
+      setIsButtonClicked(false);  // 发生错误时也要重置按钮状态
     }
   };
+  
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 4 }}>

@@ -8,7 +8,7 @@ declare global {
       saveSongs: (songs: string) => void;
       readCookies: () => Promise<string>;  // 返回类型是 string, 你也可以根据实际情况修改
       fetchPlaylistTracks: (listId: string, cookie: string) => Promise<{ [key: string]: any }>;
-
+      fetchPlaylistAll: (listId: string, cookie: string) => Promise<any[]>;
     };
   }
 }

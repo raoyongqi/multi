@@ -4,6 +4,8 @@ import path from 'path';
 
 import os from 'os';
 import getPlaylistTracks from '../common/tracks';
+import getPlaylistAll from '../common/trackall';
+
 export function initBridge() {
 
 
@@ -58,5 +60,12 @@ ipcMain.handle('read-cookies', (event) => {
     return getPlaylistTracks(listId, cookie);
 
   });
+
+
   
+  ipcMain.handle('fetch-playlist-all', async (_, listId, cookie) => {
+    return getPlaylistAll(listId, cookie);
+
+  });
+
 };

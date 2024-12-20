@@ -7,4 +7,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   readCookies: () => ipcRenderer.invoke('read-cookies'),
   fetchPlaylistTracks: (listId: string, cookie: string) =>
     ipcRenderer.invoke('fetch-playlist-tracks', listId, cookie),
-  });
+  fetchPlaylistAll: (listId: string, cookie: string) =>
+    ipcRenderer.invoke('fetch-playlist-all', listId, cookie), // 这里修复了语法问题
+  }, 
+
+);

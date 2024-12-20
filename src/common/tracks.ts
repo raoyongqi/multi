@@ -59,7 +59,7 @@ async function getPlaylistTracks(listId: string, cookie: string):  Promise<{ [ke
       return { song: firstSong, lyric: firstTrackLyrics, url: firstDownloadUrl };
       
     } catch (error) {
-      return { tracks: [], firstTrackLyrics: 'Failed to fetch lyrics.' };
+      return { firstTrackLyrics: 'Failed to fetch lyrics.' };
     }
   }
 

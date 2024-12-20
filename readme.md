@@ -10,8 +10,8 @@
     点击 下拉菜单（在窗口顶部的标签旁边，通常是三个点 ...），然后选择 Settings。
     在设置界面中，选择左侧的 Profiles，然后点击 Defaults 或 Startup，取决于你的版本。
     找到 Default profile 设置，点击下拉菜单，选择 Command Prom
-
-$OutputEncoding = New-Object -typename System.Text.UTF8Encoding
+notepad $PROFILE
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 
 这条命令设置了 PowerShell 输出的编码为 UTF-8，这样就能正确显示中文字符。
 
