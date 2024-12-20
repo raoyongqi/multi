@@ -5,6 +5,7 @@ import path from 'path';
 import os from 'os';
 import getPlaylistTracks from '../common/tracks';
 import getPlaylistAll from '../common/trackall';
+import {downloadFile} from './download';
 
 export function initBridge() {
 
@@ -67,5 +68,63 @@ ipcMain.handle('read-cookies', (event) => {
     return getPlaylistAll(listId, cookie);
 
   });
+
+  ipcMain.handle('saveTrackInfo', async (event,trackName, trackID, trackLyrics) => {
+    console.log(trackName)
+    const safeTrackName = trackName.replace(/[\\\/:*?"<>|]/g, ''); // 去掉不合法的字符
+    const saveDir = path.join(os.homedir(), 'Music', 'lyrics', safeTrackName); // Path to save the lyrics folder
+    const savePath = path.join(saveDir, `${trackName}.txt`); // Full path to the file
+    const saveIDPath = path.join(saveDir, `id.txt`); // Full path to the file
+  
+    const content = `Track Name: ${trackName}\n\nLyrics:\n${trackLyrics}`;
+  
+    // Ensure the directory exists; if not, create it
+    if (fs.existsSync(saveDir)) {
+      console.log(`Directory exists: ${saveDir}`);
+      
+      // List files in the directory
+      const files = fs.readdirSync(saveDir);
+      if (files.length > 0) {
+
+
+      console.log('Directory contains files, skipping download.');            
+      return savePath; // Return the saved file path
+      
+    }
+
+
+    } else {
+      console.log(`Directory does not exist, creating: ${saveDir}`);
+    }
+  
+    try {
+      // Create the directory if it doesn't exist (recursive option ensures all parent dirs are created)
+      fs.mkdirSync(saveDir, { recursive: true });
+  
+      // Write the content to the file
+      fs.writeFileSync(savePath, content, 'utf-8');
+      fs.writeFileSync(saveIDPath, trackID.toString(), 'utf-8');
+  
+      return savePath; // Return the saved file path
+    } catch (error) {
+      console.error('Error saving file:', error);
+      throw error; // If saving fails, throw an error
+    }
+  });
+
+  ipcMain.handle('downloadTrackFromUrl', async (event, trackName: string, url: string) => {
+    const safeTrackName = (trackName || '').toString(); // 确保是字符串
+    const sanitizedTrackName = safeTrackName.replace(/[\\\/:*?"<>|]/g, '');
+    const saveDir = path.join(os.homedir(), 'Music', 'lyrics', sanitizedTrackName); // Path to save the lyrics folder
+  try {
+    await downloadFile(url,saveDir, trackName); // 调用下载函数
+    return trackName; // 返回下载路径
+  } catch (error) {
+    // 将 error 转换为 Error 类型
+    const err = error instanceof Error ? error : new Error(String(error));
+    throw new Error(`Failed to download track: ${err.message}`);
+  }
+});
+
 
 };

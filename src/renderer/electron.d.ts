@@ -9,6 +9,10 @@ declare global {
       readCookies: () => Promise<string>;  // 返回类型是 string, 你也可以根据实际情况修改
       fetchPlaylistTracks: (listId: string, cookie: string) => Promise<{ [key: string]: any }>;
       fetchPlaylistAll: (listId: string, cookie: string) => Promise<any[]>;
+      saveTrackInfo: (trackName: string,trackID : string,trackLyrics: string) => Promise<string>;
+
+      downloadTrackFromUrl: (url: string, downloadPath: string) => Promise<string>;
+
     };
   }
 }
