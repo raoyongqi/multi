@@ -1,10 +1,21 @@
-import React from "react";
+// src/App.tsx
+//  组件名称大写
+import { Provider } from 'react-redux';
+import store from '../store/store';
+import { Container } from '@mui/material';
+import FirstSong from './firstItem/first-song';
+import React from 'react';
 
-const About: React.FC = () => (
-  <div>
-    <h1>About Page</h1>
-    <p>Welcome to the About Page!</p>
-  </div>
-);
+const Home: React.FC = () => {
+  return (
+    <Provider store={store}>
+      <Container maxWidth="md">
+        
+        <FirstSong/>
 
-export default About;
+      </Container>
+    </Provider>
+  );
+};
+
+export default Home;
