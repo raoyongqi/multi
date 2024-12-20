@@ -118,7 +118,7 @@ const FirstSong: React.FC = () => {
                   variant="outlined"
                   color="secondary"
                   onClick={handleCancel} // 取消按钮
-                  disabled={isCancelled || isButtonClicked} // 如果已取消或按钮正在进行中，禁用
+                  disabled={isCancelled || !isButtonClicked} // 如果已取消或没有进行中的下载，不禁用
                 >
                   {isCancelled ? "Cancelled" : "Cancel Download"}
                 </Button>

@@ -26,11 +26,7 @@ const CookiesStat: React.FC = () => {
   }
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h4">Cookies Data</Typography>
-      <Paper elevation={3} sx={{ padding: 2, marginTop: 2 }}>
-        {/* 渲染 cookies 数据，如果是对象或者数组可以格式化显示 */}
-        <pre>hello</pre>
-      </Paper>
+      <Typography variant="h4">Cookies Prepared</Typography>
     </Box>
   );
   // 如果有 cookies 数据，展示
