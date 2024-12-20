@@ -37,6 +37,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.0.2"
+    "react-router-dom": "^7.0.2",
+    "sanitize-filename": "^1.6.3",
+    "winston": "^3.17.0"
   }
 }

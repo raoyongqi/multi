@@ -24,6 +24,14 @@ const songsStat: React.FC = () => {
    if(error){
       return <Typography color="error">{error}</Typography>;  // 显示错误信息，字体颜色为红色
    }
+   return (
+      <div>
+        <h1>Songs Data</h1>
+        {/* 在此显示您的歌曲数据 */}
+        {/* 例如： */}
+        {/* <pre>{JSON.stringify(songs, null, 2)}</pre> */}
+      </div>
+    );
 };
 
 export default songsStat;  // 导出该组件供其他地方使用

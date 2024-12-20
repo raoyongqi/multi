@@ -19,29 +19,25 @@ export const fetchsongs = createAsyncThunk("songs/fetchsongs", async () => {
     return songs;  // Return the data
   });
   
-
-
-
-  
-// 创建一个名为 "songs" 的 slice，用于处理习惯（songs）状态的更新
+// 创建一个名为 "songs" 的 slice，用于处理（songs）状态的更新
 const songslice = createSlice({
     name: "songs",  // 定义该 slice 的名称为 "songs"，用于标识该 slice
     initialState,  // 初始状态，通常会定义一个包含默认值的状态对象
     reducers: {  // 定义同步操作（reducers），用于处理 state 的变化
 
-        // 删除指定的习惯
+        // 删除指定的song
         removeSongs: (
             state,
-            action: PayloadAction<{ id: string }>  // action 中包含习惯的 ID
+            action: PayloadAction<{ id: string }>  // action 中包含song的 ID
         ) => {
-            // 找到要删除的习惯在 songs 数组中的索引
-                // 输出要删除的习惯的 ID 和找到的索引
+            // 找到要删除的song在 songs 数组中的索引
+                // 输出要删除的song的 ID 和找到的索引
             const index = state.songs.findIndex((h) => h === action.payload.id);
 
 
             console.log("Removing songs with ID:", action);
             console.log("Found index:", index);
-            // 如果找到了该习惯（index 不为 -1），则从 songs 数组中删除
+            // 如果找到了该song（index 不为 -1），则从 songs 数组中删除
             if (index > -1) {
                 state.songs.splice(index, 1);
             }

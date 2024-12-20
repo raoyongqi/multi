@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import os from 'os';
-
+import getPlaylistTracks from '../common/tracks';
 export function initBridge() {
 
 
@@ -54,6 +54,9 @@ ipcMain.handle('read-cookies', (event) => {
   });
 
 
-  
+  ipcMain.handle('fetch-playlist-tracks', async (_, listId, cookie) => {
+    return getPlaylistTracks(listId, cookie);
+
+  });
   
 };

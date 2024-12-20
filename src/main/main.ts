@@ -1,7 +1,6 @@
 import { app, BrowserWindow ,dialog} from 'electron';
 import * as path from 'path';
 import process from 'process';
-import { greet } from '../common/constants' // 引用common中的utils
 
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
@@ -22,7 +21,6 @@ async function main() {
     },
     frame: false,
 });
-console.log(greet('Electron User')) // 在控制台打印问候信息
 
 win.removeMenu();
 
@@ -40,13 +38,18 @@ if (app.requestSingleInstanceLock()) {
   }
 
   win.once('ready-to-show', () => win.show());
-  
+
   if (process.env.NODE_ENV === 'development') {
+
     await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS]).then((name) => console.log(`Added Extension:  ${name}`))
     .catch((err) => console.log('An error occurred: ', err));
     win.once('show', () => win.webContents.openDevTools());
     // 开发环境加载开发服务器 URL
     await win.loadURL('http://localhost:5173');
+    if (process.platform === 'win32') {
+      require('child_process').execSync('chcp 65001');
+    }
+    
   } else {
     await win.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
 
@@ -74,3 +77,4 @@ process.exit(-1);
 main().catch(crash);
 
 process.on('uncaughtException', crash);
+

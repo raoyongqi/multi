@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";  // 从 Redux Toolkit 导入 configureStore，用于简化 Redux store 的配置过程
 import songsReducer from './songs-slice'  // 导入 songsSlice 的 reducer，它处理关于习惯（songs）状态的更新逻辑
-
+import cookiesReducer from './cookies-slice';
 // 配置 Redux store
 const store =  configureStore({
     reducer: {
-        songs: songsReducer  // 将 songsReducer 作为 reducer 配置到 Redux store 中的 songs 部分
+        songs: songsReducer,
+        cookies: cookiesReducer  // 将 cookiesSlice 添加到 Redux Store 中  // 将 songsReducer 作为 reducer 配置到 Redux store 中的 songs 部分
     },
 })
 
