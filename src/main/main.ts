@@ -1,6 +1,8 @@
 import { app, BrowserWindow ,dialog} from 'electron';
 import * as path from 'path';
 import process from 'process';
+import { greet } from '../common/constants' // 引用common中的utils
+
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS,
@@ -20,6 +22,7 @@ async function main() {
     },
     frame: false,
 });
+console.log(greet('Electron User')) // 在控制台打印问候信息
 
 win.removeMenu();
 

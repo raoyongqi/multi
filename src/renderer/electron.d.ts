@@ -2,11 +2,12 @@
 declare global {
   interface Window {
     electronAPI: {
-      saveFile: (content: string) => Promise<string>;
-      readFile: () => Promise<string>;
-      fetchPlaylistTracks: (listId: string, cookie: string) => Promise<{ [key: string]: any }>;
-      saveTrackInfo: (trackName: string,trackID : string,trackLyrics: string) => Promise<string>;
-      downloadTrackFromUrl: (url: string, downloadPath: string) => Promise<string>;
+
+      readSongs: () => Promise<any>;  // 根据您的 JSON 数据结构，可以调整类型
+
+      saveSongs: (songs: string) => void;
+      readCookies: () => Promise<string>;  // 返回类型是 string, 你也可以根据实际情况修改
+
     };
   }
 }
