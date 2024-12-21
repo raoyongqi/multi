@@ -30,7 +30,7 @@ ipcMain.handle('read-cookies', (event) => {
     const filePath = path.join(__dirname, '..', '..', 'common', 'data.txt'); // 设置保存路径
 
     const tempPath = `${filePath}.tmp`;
-
+ 
     // 保存文件
     fs.writeFile(tempPath, songs, 'utf8', (err) => {
       if (err) {
@@ -42,7 +42,9 @@ ipcMain.handle('read-cookies', (event) => {
         if (err) {
           logger.error('Failed to replace the original file:', err);
         } else {
-          logger.info('File saved successfully via atomic write:', filePath);
+          logger.info(typeof filePath);
+
+          logger.info(filePath);
         }
       });
     });
