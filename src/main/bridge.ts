@@ -3,9 +3,10 @@ import fs from 'fs';
 import path from 'path';
 
 import os from 'os';
-import getPlaylistTracks from '../common/tracks';
 import getPlaylistAll from '../common/trackall';
 import {downloadFile} from './download';
+import { useLogger } from '../common/logger';
+const { logger } = useLogger('silly');
 
 export function initBridge() {
 
@@ -14,7 +15,6 @@ export function initBridge() {
 ipcMain.handle('read-cookies', (event) => {
   const userRoamingPath = path.join(os.homedir(), 'AppData', 'Roaming', 'recipe-saver');  // 指定保存路径
   const filePath = path.join(userRoamingPath, 'saved.txt');  // 文件路径
-
   // 检查文件是否存在
   if (fs.existsSync(filePath)) {
       const fileContent = fs.readFileSync(filePath, 'utf8');
@@ -25,17 +25,26 @@ ipcMain.handle('read-cookies', (event) => {
 });
 
 
-  ipcMain.handle('save-songs', (event, updatedHabits) => {
+  ipcMain.handle('save-songs', (event, songs) => {
     // 直接指定文件保存路径
     const filePath = path.join(__dirname, '..', '..', 'common', 'data.txt'); // 设置保存路径
-  
+
+    const tempPath = `${filePath}.tmp`;
+
     // 保存文件
-    fs.writeFile(filePath, updatedHabits, 'utf8', (err) => {
+    fs.writeFile(tempPath, songs, 'utf8', (err) => {
       if (err) {
-        console.error('Failed to save the file:', err);
-      } else {
-        console.log('File saved successfully:', filePath);
+        logger.error('Failed to write to temp file:', err);
+        return;
       }
+
+      fs.rename(tempPath, filePath, (err) => {
+        if (err) {
+          logger.error('Failed to replace the original file:', err);
+        } else {
+          logger.info('File saved successfully via atomic write:', filePath);
+        }
+      });
     });
   });
 
@@ -56,13 +65,6 @@ ipcMain.handle('read-cookies', (event) => {
   
   });
 
-
-  ipcMain.handle('fetch-playlist-tracks', async (_, listId, cookie) => {
-    return getPlaylistTracks(listId, cookie);
-
-  });
-
-
   
   ipcMain.handle('fetch-playlist-all', async (_, listId, cookie) => {
     return getPlaylistAll(listId, cookie);
@@ -70,7 +72,7 @@ ipcMain.handle('read-cookies', (event) => {
   });
 
   ipcMain.handle('saveTrackInfo', async (event,trackName, trackID, trackLyrics) => {
-    console.log(trackName)
+    logger.info(trackName)
     const safeTrackName = trackName.replace(/[\\\/:*?"<>|]/g, ''); // 去掉不合法的字符
     const saveDir = path.join(os.homedir(), 'Music', 'lyrics', safeTrackName); // Path to save the lyrics folder
     const savePath = path.join(saveDir, `${trackName}.txt`); // Full path to the file
@@ -80,21 +82,21 @@ ipcMain.handle('read-cookies', (event) => {
   
     // Ensure the directory exists; if not, create it
     if (fs.existsSync(saveDir)) {
-      console.log(`Directory exists: ${saveDir}`);
+      logger.info(`Directory exists: ${saveDir}`);
       
       // List files in the directory
       const files = fs.readdirSync(saveDir);
       if (files.length > 0) {
 
 
-      console.log('Directory contains files, skipping download.');            
+      logger.info('Directory contains files, skipping download.');            
       return savePath; // Return the saved file path
       
     }
 
 
     } else {
-      console.log(`Directory does not exist, creating: ${saveDir}`);
+      logger.info(`Directory does not exist, creating: ${saveDir}`);
     }
   
     try {
@@ -107,7 +109,7 @@ ipcMain.handle('read-cookies', (event) => {
   
       return savePath; // Return the saved file path
     } catch (error) {
-      console.error('Error saving file:', error);
+      logger.error('Error saving file:', error);
       throw error; // If saving fails, throw an error
     }
   });

@@ -11,14 +11,13 @@ const FirstSong: React.FC = () => {
   );
   const dispatch = useDispatch<AppDispatch>();
 
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [Downloading, setDownloading] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false); // 添加取消状态
 
   const handleBulkDelete = async (song: string) => {
     try {
       // 先从 Redux 中移除歌曲
       dispatch(removeSongs({ id: song }));
-
       // 然后更新歌曲列表
       const updatedSongs = songs.filter((h) => h !== song).join("\n");
       await window.electronAPI.saveSongs(updatedSongs); // 使用 await 等待保存操作完成
@@ -30,9 +29,8 @@ const FirstSong: React.FC = () => {
 
   // 处理显示和下载歌曲信息的函数
   const handleOneList = async (song: string) => {
-    if (isCancelled || isButtonClicked) return; // 如果被取消或按钮已被点击，则不执行
+    if (isCancelled || Downloading) return; // 如果被取消或按钮已被点击，则不执行
 
-    setIsButtonClicked(true); // 设置按钮点击状态
 
     try {
       // 使用 await 调用异步的 fetchPlaylistTracks 函数，并传入 `song` 和 `cookies`
@@ -63,33 +61,41 @@ const FirstSong: React.FC = () => {
     } catch (err) {
       console.error("Error fetching tracks:", err); // 捕获并处理错误
     } finally {
-      setIsButtonClicked(false); // 恢复按钮的可点击状态
     }
   };
 
   // 处理批量下载所有歌曲的函数
   const handleBulkDownload = async () => {
-    if (isButtonClicked || isCancelled) return; // 如果按钮已被点击或已经取消，则不执行
-    setIsButtonClicked(true); // 设置按钮点击状态
+
+    if (Downloading || isCancelled) return; // 如果按钮已被点击或已经取消，则不执行
+    
+    
+    setDownloading(true); // 设置按钮点击状态
 
     try {
       for (const song of songs) {
-        if (isCancelled) return; // 在每次循环时检查是否被取消
+        if (isCancelled){
+
+          
+          setDownloading(false); // 恢复按钮的可点击状态
+          return; // 在每次循环时检查是否被取消
+        } 
         await handleOneList(song); // 按顺序处理每个歌曲
       }
-      console.log("Bulk download complete.");
+
+
     } catch (err) {
       console.error("Error during bulk download:", err);
     } finally {
-      setIsButtonClicked(false); // 恢复按钮的可点击状态
+      setDownloading(false); // 恢复按钮的可点击状态
     }
   };
 
-  // 处理取消下载操作的函数
-  const handleCancel = () => {
-    setIsCancelled(true); // 设置取消状态为 true
-    setIsButtonClicked(false); // 恢复按钮可点击状态
-  };
+// 处理取消/恢复下载操作的函数
+const handleCancel = () => {
+  setIsCancelled((prev) => !prev); // 每次点击切换状态
+};
+
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 4 }}>
@@ -110,18 +116,32 @@ const FirstSong: React.FC = () => {
                   variant="outlined"
                   color="primary"
                   onClick={handleBulkDownload} // 批量下载按钮
-                  disabled={isButtonClicked || isCancelled} // 如果按钮已点击或操作已取消，禁用按钮
+                  disabled={Downloading } // 如果按钮已点击或操作已取消，禁用按钮
                 >
-                  {isButtonClicked ? "Downloading..." : "Bulk Download"}
+                  {Downloading ? "Downloading..." : "Bulk Download"}
                 </Button>
                 <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={handleCancel} // 取消按钮
-                  disabled={isCancelled || !isButtonClicked} // 如果已取消或没有进行中的下载，不禁用
-                >
-                  {isCancelled ? "Cancelled" : "Cancel Download"}
-                </Button>
+                variant="outlined"
+                onClick={handleCancel} // 点击触发取消或恢复
+                disabled={!Downloading} // 如果没有进行中的下载，禁用按钮
+                sx={{
+                  backgroundColor: isCancelled ? "red" : "blue", // 背景色
+                  color: "white", // 保持文本对比度为白色
+                  borderColor: isCancelled ? "red" : "blue", // 边框色与背景一致
+                  "&:hover": {
+                    backgroundColor: isCancelled ? "darkred" : "darkblue", // 悬停时加深背景色
+                  },
+                  "&:disabled": {
+                    backgroundColor: "lightgray", // 禁用时背景色灰色
+                    color: "gray",
+                    borderColor: "gray",
+                  },
+                }}
+              >
+                {isCancelled ? "Cancelled" : "Cancel Download"}
+              </Button>
+
+
               </Box>
             </Grid>
           </Grid>
