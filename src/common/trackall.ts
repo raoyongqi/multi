@@ -23,7 +23,7 @@ async function getPlaylistAll(listId: string, cookie: string): Promise<{ [key: s
     const validSongs = []; // 存储有效歌曲的数组
 
     let count = 0; // 初始化计数器
-    const startFrom = 959 ; // 从第 105 首歌曲开始查找，索引从 0 开始
+    const startFrom = 0 ; // 从第 105 首歌曲开始查找，索引从 0 开始
     
     // 遍历歌曲列表，查找有效的 downloadUrl
     for (let i = startFrom; i < songs.length; i++) {
